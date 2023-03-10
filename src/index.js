@@ -27,15 +27,31 @@ function init() {
   // scene.add(light)
   // const light = new THREE.AmbientLight( 0x404040 ); // soft white light
   // scene.add( light );
+  // Добавление света
   var spotLight = new THREE.SpotLight( 0xffffff );
-  spotLight.position.set( 10, 3, 8 );
+  spotLight.position.set( 0, 100, 0 );
   
   scene.add( spotLight );
 
 
   const loader = new GLTFLoader().setPath('src/models/');
   loader.load('free_porsche_911_carrera_4s.glb', function (gltf) {
-    scene.add(gltf.scene);
+    // Материал
+  const texture = new THREE.TextureLoader().load( 'src/models/123.png' );
+  const basicMaterial = new THREE.MeshBasicMaterial( { map: texture, transparent: true } );
+
+  const gltfScene = gltf.scene
+
+  gltfScene.traverse((child) => {
+    if (child.isMesh && child.name === "mesh_0") {
+      gltfMesh = child;
+      originalMaterial = gltfMesh.material;
+      gltfMesh.material = basicMaterial;
+    }
+  });
+
+    scene.add(gltfScene);
+    console.log(scene)
 
     render();
   });
@@ -55,7 +71,7 @@ function init() {
   controls.target.set(0, 0, -0.2);
   controls.update();
 
-  // Текстура
+
 
   window.addEventListener('resize', onWindowResize);
 }
@@ -69,11 +85,10 @@ function init() {
     render();
   }
 
-
+// Анимация объекта
   function animate() {
     requestAnimationFrame( animate );
-    // scene.rotation.x += 0.01;
-    scene.rotation.y += -0.01;
+    scene.rotation.z += -0.01;
     renderer.render( scene, camera );
   }
   animate();
