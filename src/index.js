@@ -38,20 +38,12 @@ function init() {
   loader.load('free_porsche_911_carrera_4s.glb', function (gltf) {
     // Материал
   const texture = new THREE.TextureLoader().load( 'src/models/123.png' );
-  const basicMaterial = new THREE.MeshBasicMaterial( { map: texture, transparent: true } );
+  console.log(texture)
+  new THREE.MeshBasicMaterial( { map: texture } );
 
-  const gltfScene = gltf.scene
+  // scene.add(material)
 
-  gltfScene.traverse((child) => {
-    if (child.isMesh && child.name === "mesh_0") {
-      gltfMesh = child;
-      originalMaterial = gltfMesh.material;
-      gltfMesh.material = basicMaterial;
-    }
-  });
-
-    scene.add(gltfScene);
-    console.log(scene)
+    scene.add(gltf.scene);
 
     render();
   });
